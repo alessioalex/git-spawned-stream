@@ -22,5 +22,5 @@ module.exports = function(repoPath, args, limit, gitCommand = 'git') {
   debug('limit', limit);
   debug('gitCommand', gitCommand);
 
-  return run(spawn(gitPath, _args), limit);
+  return run(spawn(gitCommand, _args), limit);
 };
