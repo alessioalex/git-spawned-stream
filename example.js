@@ -2,7 +2,7 @@
 
 var gitSpawnedStream = require('./');
 var path = require('path');
-var repoPath = process.env.REPO || (__dirname + '.git');
+var repoPath = process.env.REPO || path.join(__dirname, '.git');
 repoPath = path.resolve(repoPath);
 var byteLimit = 5 * 1024 * 1024; // 5 Mb
 
@@ -17,7 +17,7 @@ var stream = gitSpawnedStream(repoPath, [
 stream.on('data', function(data) {
   console.log('DATA', data.toString('utf8'));
 }).on('error', function(err) {
-  console.error('An error occured:');
+  console.error('An error occurred:');
   console.error('-----------------\n');
   console.error(err.message);
   process.exit(1);
