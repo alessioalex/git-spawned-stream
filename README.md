@@ -5,15 +5,17 @@ Create a readable stream from a spawned git process.
 ## Usage
 
 ```js
-gitSpawnedStream(repoPath, spawnArguments, limitInBytes, gitBinary)
+gitSpawnedStream(spawnArguments, options)
 ```
 
 Arguments:
 
-- `repoPath` - the path to the repo, ex: /home/alex/node/.git (or the path to the git bare repo)
 - `spawnArguments` - the arguments that will be passed to the `child_process.spawn` function
-- `limitInBytes` - kill the process if it exceeds the imposed limit (sends more data than allowed)
-- `gitBinary` - path to the git binary to use (use the one in `PATH` by default)
+- `options` - <optional> options
+  - `repoPath`  - <optional> Default: `path.join(process.cwd(), '.git')` - the path to the repo, ex: /home/alex/node/.git (or the path to the git bare repo)
+  - `limit`     - <optional> - kill the process if it exceeds the imposed limit (sends more data than allowed)
+  - `gitBinary` - <optional> Default: `'git'` - path to the git binary to use
+  - `input`     - <optional> - The value which will be passed as stdin to the spawned process
 
 Example:
 
@@ -22,15 +24,18 @@ var gitSpawnedStream = require('git-spawned-stream');
 var path = require('path');
 var repoPath = process.env.REPO || path.join(__dirname, '.git');
 repoPath = path.resolve(repoPath);
-var byteLimit = 5 * 1024 * 1024; // 5 Mb
+var limit = 5 * 1024 * 1024; // 5 Mb
 
 // sort of a git log -n 2
-var stream = gitSpawnedStream(repoPath, [
+var stream = gitSpawnedStream([
   'rev-list',
   '--max-count=2',
   '--header',
   'HEAD'
-], byteLimit);
+], {
+  repoPath: repoPath,
+  limit: limit
+});
 
 stream.on('data', function(data) {
   console.log('DATA', data.toString('utf8'));
