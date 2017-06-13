@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
-var gitSpawnedStream = require('./')
-var path = require('path')
-var repoPath = process.env.REPO || path.join(__dirname, '.git')
-repoPath = path.resolve(repoPath)
-var byteLimit = 5 * 1024 * 1024 // 5 Mb
+var gitSpawnedStream = require('./');
+var path = require('path');
+var repoPath = process.env.REPO || path.join(__dirname, '.git');
+repoPath = path.resolve(repoPath);
+var byteLimit = 5 * 1024 * 1024; // 5 Mb
 
 // sort of a git log -n 2
 var stream = gitSpawnedStream(repoPath, [
@@ -12,15 +12,15 @@ var stream = gitSpawnedStream(repoPath, [
   '--max-count=2',
   '--header',
   'HEAD'
-], byteLimit)
+], byteLimit);
 
 stream.on('data', function (data) {
-  console.log('DATA', data.toString('utf8'))
+  console.log('DATA', data.toString('utf8'));
 }).on('error', function (err) {
-  console.error('An error occurred:')
-  console.error('-----------------\n')
-  console.error(err.message)
-  process.exit(1)
+  console.error('An error occurred:');
+  console.error('-----------------\n');
+  console.error(err.message);
+  process.exit(1);
 }).on('end', function () {
-  console.log("\n±±±±±±±±±±±±±±±±±\nThat's all folks!")
-})
+  console.log("\n±±±±±±±±±±±±±±±±±\nThat's all folks!");
+});

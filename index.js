@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
-var path = require('path')
-var run = require('spawn-to-readstream')
-var spawn = require('child_process').spawn
-var debug = require('debug')('git-spawned-stream')
+var path = require('path');
+var run = require('spawn-to-readstream');
+var spawn = require('child_process').spawn;
+var debug = require('debug')('git-spawned-stream');
 
 /**
  * Create a readable stream from a spawned git process.
@@ -19,27 +19,27 @@ module.exports = function (args, options) {
   options = Object.assign({
     repoPath: path.join(process.cwd(), '.git'),
     gitBinary: 'git'
-  }, options)
+  }, options);
 
-  var _args = ['--git-dir=' + options.repoPath]
+  var _args = ['--git-dir=' + options.repoPath];
 
   args.forEach(function (item) {
-    _args.push(item)
-  })
+    _args.push(item);
+  });
 
-  debug('args', _args)
-  debug('limit', options.limit)
-  debug('gitBinary', options.gitBinary)
+  debug('args', _args);
+  debug('limit', options.limit);
+  debug('gitBinary', options.gitBinary);
 
-  var ps = spawn(options.gitBinary, _args)
+  var ps = spawn(options.gitBinary, _args);
 
   if (options.input) {
     if (options.input.pipe) {
-      options.input.pipe(ps.stdin)
+      options.input.pipe(ps.stdin);
     } else {
-      ps.stdin.write(options.input)
-      ps.stdin.end()
+      ps.stdin.write(options.input);
+      ps.stdin.end();
     }
   }
-  return run(ps, options.limit)
-}
+  return run(ps, options.limit);
+};
