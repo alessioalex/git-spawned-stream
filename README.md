@@ -12,7 +12,7 @@ Arguments:
 
 - `spawnArguments` - the arguments that will be passed to the `child_process.spawn` function
 - `options` - <optional> options
-  - `repoPath`  - <optional> Default: `path.join(process.cwd(), '.git')` - the path to the repo, ex: /home/alex/node/.git (or the path to the git bare repo)
+  - `gitDir`  - <optional> Default: `path.join(process.cwd(), '.git')` - the path to the repo, ex: /home/alex/node/.git (or the path to the git bare repo)
   - `limit`     - <optional> - kill the process if it exceeds the imposed limit (sends more data than allowed)
   - `gitBinary` - <optional> Default: `'git'` - path to the git binary to use
   - `input`     - <optional> - The value which will be passed as stdin to the spawned process
@@ -22,8 +22,8 @@ Example:
 ```js
 var gitSpawnedStream = require('git-spawned-stream');
 var path = require('path');
-var repoPath = process.env.REPO || path.join(__dirname, '.git');
-repoPath = path.resolve(repoPath);
+var gitDir = process.env.REPO || path.join(__dirname, '.git');
+gitDir = path.resolve(gitDir);
 var limit = 5 * 1024 * 1024; // 5 Mb
 
 // sort of a git log -n 2
@@ -33,7 +33,7 @@ var stream = gitSpawnedStream([
   '--header',
   'HEAD'
 ], {
-  repoPath: repoPath,
+  gitDir: gitDir,
   limit: limit
 });
 

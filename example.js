@@ -2,17 +2,19 @@
 
 var gitSpawnedStream = require('./');
 var path = require('path');
-var repoPath = process.env.REPO || path.join(__dirname, '.git');
-repoPath = path.resolve(repoPath);
-var byteLimit = 5 * 1024 * 1024; // 5 Mb
+var gitDir = process.env.REPO ? path.resolve(process.env.REPO) : path.join(__dirname, '.git');
+var limit = 5 * 1024 * 1024; // 5 Mb
 
 // sort of a git log -n 2
-var stream = gitSpawnedStream(repoPath, [
+var stream = gitSpawnedStream([
   'rev-list',
   '--max-count=2',
   '--header',
   'HEAD'
-], byteLimit);
+], {
+  gitDir: gitDir,
+  limit: limit
+});
 
 stream.on('data', function (data) {
   console.log('DATA', data.toString('utf8'));

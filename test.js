@@ -1,6 +1,9 @@
 'use strict';
 /* eslint-env node, mocha */
 var proxyquire = require('proxyquire');
+var path = require('path');
+var fs = require('fs');
+var execSync = require('child_process').execSync;
 require('should');
 
 describe('git-spawned-stream', function () {
@@ -17,7 +20,7 @@ describe('git-spawned-stream', function () {
       },
       'child_process': {
         spawn: function (cmd, args) {
-          spawnArgs.unshift('--git-dir=/home/node.git');
+          spawnArgs.unshift('--no-pager');
           cmd.should.eql('git');
           args.should.eql(spawnArgs);
 
@@ -37,9 +40,42 @@ describe('git-spawned-stream', function () {
     });
 
     gitSpawnedStream(spawnArgs, {
-      repoPath: '/home/node.git',
       limit: limit,
       input: 'spawnInput'
     });
+  });
+
+  it('git rev-list', function (done) {
+    var git = proxyquire.load('./', {});
+    var result = '';
+    git(['log', '--max-count=1'], {
+      pager: true,
+      workTree: __dirname,
+      gitDir: path.join(__dirname, '.git')
+    })
+      .on('data', function (data) {
+        result += data;
+      }).on('end', function () {
+        result.should.match(/^commit \w+$/im);
+        done();
+      }).on('error', done);
+  });
+
+  it('git blame', function (done) {
+    var git = proxyquire.load('./', {});
+    var result = '';
+    git(['blame', '--contents', '-', '--', 'README.md'], {
+      gitDir: path.join(__dirname, '.git'),
+      config: {
+        'core.quotepath': false
+      },
+      input: fs.createReadStream(path.join(__dirname, 'README.md'))
+    })
+      .on('data', function (data) {
+        result += data;
+      }).on('end', function () {
+        result.should.eql(execSync('git blame -- README.md').toString());
+        done();
+      }).on('error', done);
   });
 });

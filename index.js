@@ -1,6 +1,5 @@
 'use strict';
 
-var path = require('path');
 var run = require('spawn-to-readstream');
 var spawn = require('child_process').spawn;
 var debug = require('debug')('git-spawned-stream');
@@ -9,7 +8,10 @@ var debug = require('debug')('git-spawned-stream');
  * Create a readable stream from a spawned git process.
  * @param   {String[]}                       args                      the arguments that will be passed to the `child_process.spawn` function
  * @param   {Object}                         [options]                 options
- * @param   {String}                         [options.repoPath='.git'] the path to the repo, ex: `/home/alex/node/.git`
+ * @param   {Object}                         [options.config]          `-c` from `git`.
+ * @param   {String}                         [options.gitDir]          `--git-dir` from `git`.
+ * @param   {String}                         [options.workTree]        `--work-tree` from `git`.
+ * @param   {String}                         [options.pager=false]     `--no-pager` from `git`.
  * @param   {String}                         [options.gitBinary='git'] path to the git binary to use
  * @param   {String}                         [options.limit]           kill the process if it exceeds the imposed limit (sends more data than allowed)
  * @param   {String|Buffer|Stream.Readable}  [options.input]           The value which will be passed as stdin to the spawned process
@@ -17,11 +19,28 @@ var debug = require('debug')('git-spawned-stream');
  */
 module.exports = function (args, options) {
   options = Object.assign({
-    repoPath: path.join(process.cwd(), '.git'),
     gitBinary: 'git'
   }, options);
 
-  var _args = ['--git-dir=' + options.repoPath];
+  var _args = [];
+
+  if (!options.pager) {
+    _args.push('--no-pager');
+  }
+
+  if (options.gitDir) {
+    _args.push('--git-dir=' + options.gitDir);
+  }
+
+  if (options.workTree) {
+    _args.push('--work-tree=' + options.workTree);
+  }
+
+  if (options.config) {
+    Object.keys(options.config).forEach(function (key) {
+      _args.push('-c', key + '=' + String(options.config[key]));
+    });
+  }
 
   args.forEach(function (item) {
     _args.push(item);
