@@ -10,52 +10,38 @@ gitSpawnedStream(args, options)
 
 ### Parameters:
 
-- `args`    - `String[]` - the arguments that will be passed to the `child_process.spawn` function
-- `options` - `Object`   - optional options
+- `args`    - `{String[]}` - the arguments that will be passed to the `child_process.spawn` function
+- `options` - `{Object}`   - optional options
 
 ### Options:
 
-#### `config`
-
-Type: `Object`
+#### `config` `{Object}`
 
 `-c` from `git`
 
-#### `gitDir`
-
-Type: `String`
+#### `gitDir` `{String}`
 
 `--git-dir` from `git`.
 
-#### `workTree`
-
-Type: `String`
+#### `workTree` `{String}`
 
 `--work-tree` from `git`
 
-#### `pager`
-
-Type: `boolean`
+#### `pager` `{boolean}`
 
 Default: `false`
 
 `--no-pager` from `git`.
 
-#### `gitBinary`
-
-Type: `String`
+#### `gitBinary` `{String}`
 
 'git' path to the git binary to use
 
-#### `limit`
-
-Type: `number`
+#### `limit` `{number}`
 
 kill the process if it exceeds the imposed limit (sends more data than allowed)
 
-#### `input`
-
-Type: `String | Buffer | Stream.Readable`
+#### `input` `{String | Buffer | Stream.Readable}`
 
 The value which will be passed as stdin to the spawned process
 
