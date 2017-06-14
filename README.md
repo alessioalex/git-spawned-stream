@@ -5,19 +5,61 @@ Create a readable stream from a spawned git process.
 ## Usage
 
 ```js
-gitSpawnedStream(spawnArguments, options)
+gitSpawnedStream(args, options)
 ```
 
-Arguments:
+### Parameters:
 
-- `spawnArguments` - the arguments that will be passed to the `child_process.spawn` function
-- `options` - <optional> options
-  - `gitDir`  - <optional> Default: `path.join(process.cwd(), '.git')` - the path to the repo, ex: /home/alex/node/.git (or the path to the git bare repo)
-  - `limit`     - <optional> - kill the process if it exceeds the imposed limit (sends more data than allowed)
-  - `gitBinary` - <optional> Default: `'git'` - path to the git binary to use
-  - `input`     - <optional> - The value which will be passed as stdin to the spawned process
+- `args`    - `String[]` - the arguments that will be passed to the `child_process.spawn` function
+- `options` - `Object`   - optional options
 
-Example:
+### Options:
+
+#### `config`
+
+Type: `Object`
+
+`-c` from `git`
+
+#### `gitDir`
+
+Type: `String`
+
+`--git-dir` from `git`.
+
+#### `workTree`
+
+Type: `String`
+
+`--work-tree` from `git`
+
+#### `pager`
+
+Type: `boolean`
+
+Default: `false`
+
+`--no-pager` from `git`.
+
+#### `gitBinary`
+
+Type: `String`
+
+'git' path to the git binary to use
+
+#### `limit`
+
+Type: `number`
+
+kill the process if it exceeds the imposed limit (sends more data than allowed)
+
+#### `input`
+
+Type: `String | Buffer | Stream.Readable`
+
+The value which will be passed as stdin to the spawned process
+
+## Example:
 
 ```js
 var gitSpawnedStream = require('git-spawned-stream');

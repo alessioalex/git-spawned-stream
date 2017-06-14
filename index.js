@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * git-spawned-stream
+ * @module git-spawned-stream
+ */
+
 var run = require('spawn-to-readstream');
 var spawn = require('child_process').spawn;
 var debug = require('debug')('git-spawned-stream');
@@ -8,12 +13,12 @@ var debug = require('debug')('git-spawned-stream');
  * Create a readable stream from a spawned git process.
  * @param   {String[]}                       args                      the arguments that will be passed to the `child_process.spawn` function
  * @param   {Object}                         [options]                 options
- * @param   {Object}                         [options.config]          `-c` from `git`.
- * @param   {String}                         [options.gitDir]          `--git-dir` from `git`.
- * @param   {String}                         [options.workTree]        `--work-tree` from `git`.
- * @param   {String}                         [options.pager=false]     `--no-pager` from `git`.
+ * @param   {Object}                         [options.config]          `-c` from `git`
+ * @param   {String}                         [options.gitDir]          `--git-dir` from `git`
+ * @param   {String}                         [options.workTree]        `--work-tree` from `git`
+ * @param   {boolean}                        [options.pager=false]     `--no-pager` from `git`
  * @param   {String}                         [options.gitBinary='git'] path to the git binary to use
- * @param   {String}                         [options.limit]           kill the process if it exceeds the imposed limit (sends more data than allowed)
+ * @param   {number}                         [options.limit]           kill the process if it exceeds the imposed limit (sends more data than allowed)
  * @param   {String|Buffer|Stream.Readable}  [options.input]           The value which will be passed as stdin to the spawned process
  * @returns {Stream.Readable}                                          readable stream from spawned git process.
  */
