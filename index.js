@@ -11,15 +11,17 @@ var debug = require('debug')('git-spawned-stream');
 
 /**
  * Create a readable stream from a spawned git process.
- * @param   {String[]}                       args                      the arguments that will be passed to the `child_process.spawn` function
+ * @param   {string[]}                       args                      the arguments that will be passed to the `child_process.spawn` function
  * @param   {Object}                         [options]                 options
  * @param   {Object}                         [options.config]          `-c` from `git`
- * @param   {String}                         [options.gitDir]          `--git-dir` from `git`
- * @param   {String}                         [options.workTree]        `--work-tree` from `git`
+ * @param   {string}                         [options.gitDir]          `--git-dir` from `git`
+ * @param   {string}                         [options.workTree]        `--work-tree` from `git`
  * @param   {boolean}                        [options.pager=false]     `--no-pager` from `git`
- * @param   {String}                         [options.gitBinary='git'] path to the git binary to use
+ * @param   {string}                         [options.gitBinary='git'] path to the git binary to use
  * @param   {number}                         [options.limit]           kill the process if it exceeds the imposed limit (sends more data than allowed)
- * @param   {String|Buffer|Stream.Readable}  [options.input]           The value which will be passed as stdin to the spawned process
+ * @param   {string|Buffer|Stream.Readable}  [options.input]           The value which will be passed as stdin to the spawned process
+ * @param   {string}                         [options.cwd]             Current working directory of git process
+ * @param   {Object}                         [options.env]             Environment key-value pairs
  * @returns {Stream.Readable}                                          readable stream from spawned git process.
  */
 module.exports = function (args, options) {
@@ -55,7 +57,10 @@ module.exports = function (args, options) {
   debug('limit', options.limit);
   debug('gitBinary', options.gitBinary);
 
-  var ps = spawn(options.gitBinary, _args);
+  var ps = spawn(options.gitBinary, _args, {
+    cwd: options.cwd,
+    env: options.env
+  });
 
   if (options.input) {
     if (options.input.pipe) {
